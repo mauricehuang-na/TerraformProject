@@ -3,8 +3,9 @@
 ### Setting Credentials for Azure provider
  # Prerequisites
  * Must have Azure CLI downloaded
- * Run Login command
-az login
+ * Run Login command (az login)
+ * Must have terraform CLI
+
 
 ### Run Terraform CLI commands
 
