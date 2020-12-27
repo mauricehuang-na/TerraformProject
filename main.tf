@@ -21,7 +21,7 @@ output "id" {
 }
 
 resource "azurerm_virtual_network" "windows-virtual-network" {
-  name                = "windows-resources"
+  name                = "virtual-network"
   address_space       = ["10.0.0.0/16"]
   location            = "${azurerm_resource_group.windows-resource-group.location}"
   resource_group_name = "${azurerm_resource_group.windows-resource-group.name}"
@@ -30,7 +30,7 @@ resource "azurerm_virtual_network" "windows-virtual-network" {
 resource "azurerm_subnet" "subnet" {
   name                 = "internal_subnet"
   resource_group_name  = "${azurerm_resource_group.windows-resource-group.name}"
-  virtual_network_name = "windows-resources"
+  virtual_network_name = "${azurerm_virtual_network.windows-virtual-network.name}"
   address_prefixes     = ["10.0.2.0/24"]
 }
 
@@ -52,16 +52,7 @@ resource "azurerm_public_ip" "public_ip" {
   location                = "${azurerm_resource_group.windows-resource-group.location}"
   resource_group_name     = "${azurerm_resource_group.windows-resource-group.name}"
   allocation_method       = "Dynamic"
-  idle_timeout_in_minutes = 30
-}
-
-data "azurerm_public_ip" "public_ip_data" {
-  name                = "${azurerm_public_ip.public_ip.name}"
-  resource_group_name = "${azurerm_windows_virtual_machine.example.resource_group_name}"
-}
-
-output "public_ip_address" {
-  value = "${data.azurerm_public_ip.public_ip_data.ip_address}"
+  #idle_timeout_in_minutes = 30
 }
 
 resource "azurerm_windows_virtual_machine" "example" {
@@ -78,7 +69,7 @@ resource "azurerm_windows_virtual_machine" "example" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-   # disk_size_gb         = "64"
+    #disk_size_gb         = "64"
   }
 
   source_image_reference {
